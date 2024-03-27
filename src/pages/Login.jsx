@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await fetch(SUPABASE_URL, {
+      const response = await fetch(`${SUPABASE_URL}?grant_type=password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,13 +23,15 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem("supabase.auth.token", data.access_token);
-        navigate("/transactions");
-      } else {
-        throw new Error(data.error_description || "Failed to login");
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error_description || "Failed to login");
       }
+
+      const data = await response.json();
+      localStorage.setItem("supabase.auth.token", data.access_token);
+      navigate("/transactions");
     } catch (error) {
       setError(error.message);
     }
