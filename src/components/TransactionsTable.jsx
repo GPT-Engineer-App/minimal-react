@@ -1,23 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, IconButton } from "@chakra-ui/react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
-const TransactionsTable = () => {
-  const [transactions, setTransactions] = useState([]);
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const response = await fetch("https://vdnhjxmsuykhvhnvjupi.supabase.co/rest/v1/transactions", {
-        headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkbmhqeG1zdXlraHZobnZqdXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4MjIyNjUsImV4cCI6MjAyNTM5ODI2NX0.byaihexABIEbRtnd1-n8R33kkt4lIwcB1xsX6P6PUA8",
-        },
-      });
-      const data = await response.json();
-      setTransactions(data);
-    };
-
-    fetchTransactions();
-  }, []);
-
+const TransactionsTable = ({ transactions, onEdit, onDelete, onRefresh }) => {
   return (
     <Table>
       <Thead>
@@ -26,6 +11,7 @@ const TransactionsTable = () => {
           <Th>Amount</Th>
           <Th>Type</Th>
           <Th>Category</Th>
+          <Th>Actions</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -35,6 +21,10 @@ const TransactionsTable = () => {
             <Td>{transaction.amount}</Td>
             <Td>{transaction.type}</Td>
             <Td>{transaction.category}</Td>
+            <Td>
+              <IconButton icon={<FaEdit />} aria-label="Edit" onClick={() => onEdit(transaction)} mr={2} />
+              <IconButton icon={<FaTrash />} aria-label="Delete" onClick={() => onDelete(transaction.id)} />
+            </Td>
           </Tr>
         ))}
       </Tbody>
