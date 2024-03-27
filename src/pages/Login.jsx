@@ -27,7 +27,7 @@ const Login = () => {
         const data = await response.json();
         if (response.ok) {
           localStorage.setItem("supabase.auth.token", data.access_token);
-          navigate("/");
+          navigate("/transactions");
         } else {
           throw new Error(data.error_description || "Failed to login");
         }

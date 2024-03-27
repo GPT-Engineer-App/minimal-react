@@ -6,8 +6,19 @@ import Login from "./pages/Login.jsx";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
-  React.useEffect(() => {
+  const checkAuth = () => {
     setIsAuthenticated(!!localStorage.getItem("supabase.auth.token"));
+  };
+
+  React.useEffect(() => {
+    checkAuth();
+  }, []);
+
+  React.useEffect(() => {
+    window.addEventListener("storage", checkAuth);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
   }, []);
 
   return (
